@@ -1,30 +1,29 @@
 # ITAT Tribunal Order Scraper
 
-This is a Python-based scraper to extract judicial orders from the [Income Tax Appellate Tribunal (ITAT)](https://itat.gov.in/judicial/tribunalorders) website. It automates the process of submitting a tribunal search form, solving CAPTCHA with OCR (EasyOCR), and downloading resulting PDF orders.
+This Python-based scraper extracts judicial orders from the [Income Tax Appellate Tribunal (ITAT)](https://itat.gov.in/judicial/tribunalorders) website. It automates form submission using POST requests, handles CSRF tokens dynamically, solves CAPTCHA using EasyOCR, and downloads order PDFs with relevant case details.
 
 ## Features
 
-- Automated session handling with CSRF token
-- CAPTCHA recognition via EasyOCR with fallback to manual input
-- Extracts:
+- **Dynamic CSRF Token Parsing**: The script first makes a `GET` request to the ITAT search page and parses the current CSRF token directly from the HTML form field.
+- **CAPTCHA OCR via EasyOCR**: The CAPTCHA image is fetched, saved locally, and decoded using `easyocr.Reader(['en'])`. If the OCR fails, it can be extended to allow manual entry fallback.
+- **Form POST Automation**: The script mimics browser behavior by POSTing the form with hardcoded parameters for:
+  - Bench: Bangalore (`211`)
+  - Appeal Type: Income Tax Appeal (`ITA`)
+  - Date of Order: `03/06/2025`
+- **Table Data Extraction**: On a successful response, it parses all rows from the resulting HTML table, extracting:
   - Appeal Number
   - Assessment Year
   - Case Status
   - Parties Involved
   - Alpha Bench
-  - Downloadable Order Link
-- Saves results to `itat_orders.csv`
-- Downloads all order PDFs to a local `pdfs/` folder
+  - Order Link
+- **File Output**:
+  - Saves metadata to `itat_orders.csv`
+  - Downloads PDF orders into the `pdfs/` directory
 
-## Dependencies
+## 🛠️ Dependencies
 
-- `requests`
-- `beautifulsoup4`
-- `pandas`
-- `Pillow`
-- `easyocr`
-
-Install them using:
+Install all required packages via:
 
 ```bash
 pip install -r requirements.txt
